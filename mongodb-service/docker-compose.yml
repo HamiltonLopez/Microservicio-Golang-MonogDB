@@ -1,0 +1,31 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo_backups:/backup
+    networks:
+      - mongo-network
+
+  cronjob:
+    build: ../go-mongo-app/mongo-cron
+    container_name: mongo-backup
+    depends_on:
+      - mongodb
+    volumes:
+      - ./mongo_backups:/backup
+    restart: unless-stopped
+    networks:
+      - mongo-network
+
+volumes:
+  mongo-data:
+
+networks:
+  mongo-network:
+    driver: bridge
+    name: mongo-network
+
