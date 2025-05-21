@@ -1,0 +1,15 @@
+[submodule "students-create-service"]
+	path = students-create-service
+	url = https://github.com/HamiltonLopez/students-create-service.git
+[submodule "students-get-service"]
+	path = students-get-service
+	url = https://github.com/HamiltonLopez/students-get-service.git
+[submodule "students-getbyid-service"]
+	path = students-getbyid-service
+	url = https://github.com/HamiltonLopez/students-getbyid-service.git
+[submodule "students-delete-service"]
+	path = students-delete-service
+	url = https://github.com/HamiltonLopez/students-delete-service.git
+[submodule "students-update-service"]
+	path = students-update-service
+	url = https://github.com/HamiltonLopez/students-update-service.git
