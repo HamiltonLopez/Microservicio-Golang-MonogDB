@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./mongodb-service/mongo_backups:/backup
+    networks:
+      - mongo-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  mongo-backup:
+    build: ./go-mongo-app/mongo-cron
+    container_name: mongo-backup
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./mongodb-service/mongo_backups:/backup
+    restart: unless-stopped
+    networks:
+      - mongo-network
+
+  students-get-service:
+    build: ./students-get-service
+    container_name: students-get-service
+    ports:
+      - "8081:8080"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    networks:
+      - mongo-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: on-failure
+
+  students-create-service:
+    build: ./students-create-service
+    container_name: students-create-service
+    ports:
+      - "8082:8080"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    networks:
+      - mongo-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: on-failure
+
+  students-getbyid-service:
+    build: ./students-getbyid-service
+    container_name: students-getbyid-service
+    ports:
+      - "8083:8080"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    networks:
+      - mongo-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: on-failure
+
+  students-update-service:
+    build: ./students-update-service
+    container_name: students-update-service
+    ports:
+      - "8084:8080"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    networks:
+      - mongo-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: on-failure
+
+  students-delete-service:
+    build: ./students-delete-service
+    container_name: students-delete-service
+    ports:
+      - "8085:8080"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    networks:
+      - mongo-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  mongo-data:
+    name: mongodb-data
+
+networks:
+  mongo-network:
+    driver: bridge
+    name: mongo-network
+
