@@ -126,7 +126,3 @@ Para contribuir al proyecto:
 4. Push a la rama
 5. Crear un Pull Request
 
-## Licencia
-
-[Especificar la licencia del proyecto]
-
